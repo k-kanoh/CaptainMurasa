@@ -33,6 +33,8 @@ namespace CaptainMurasa
                 if (recipe.IsRecipe)
                     recipeInfos.Add(new RecipeInfo(yaml));
             }
+
+            dgvTask.SetDataSource(recipeInfos.OrderBy(x => x.Number).ToList());
         }
     }
 }

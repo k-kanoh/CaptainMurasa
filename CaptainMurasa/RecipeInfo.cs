@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CaptainMurasa
 {
-    public class RecipeInfo
+    public class RecipeInfo : ICheckableGrid
     {
         public RecipeInfo(FileInfo file)
         {
@@ -70,9 +67,14 @@ namespace CaptainMurasa
         public bool IsRecipe => RecipeTitle.IsMatch(@"^[0-9][0-9-,\s]*");
 
         /// <summary>
+        /// ☑
+        /// </summary>
+        public bool IsChecked { get; set; }
+
+        /// <summary>
         /// 項番を分解します
         /// </summary>
-        void ParseNo()
+        private void ParseNo()
         {
             if (!IsRecipe) return;
 
