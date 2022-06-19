@@ -20,6 +20,11 @@ namespace CaptainMurasa
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            Reload();
+        }
+
+        public override void Reload()
+        {
             var root = @"C:\Users\kkano\Desktop\てすと";
 
             var rootInfo = new DirectoryInfo(root);
