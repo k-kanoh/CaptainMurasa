@@ -10,6 +10,14 @@ namespace CaptainMurasa
     public static class StringExtention
     {
         /// <summary>
+        /// 有効な文字列の場合 true を返します。
+        /// </summary>
+        public static bool Val(this string value)
+        {
+            return !string.IsNullOrEmpty(value);
+        }
+
+        /// <summary>
         /// 文字列が指定された正規表現にマッチするか判定します。
         /// </summary>
         public static bool IsMatch(this string value, string pattern)
@@ -37,6 +45,14 @@ namespace CaptainMurasa
             grp2 = (groups.Count() > 1) ? groups[1] : "";
 
             return m.Success;
+        }
+
+        /// <summary>
+        /// 文字列を正規表現で分割します。
+        /// </summary>
+        public static string[] Split(this string value, string pattern)
+        {
+            return Regex.Split(value, pattern);
         }
     }
 }

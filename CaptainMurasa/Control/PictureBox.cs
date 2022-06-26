@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace CaptainMurasa
 {
     public class PictureBox : System.Windows.Forms.PictureBox
     {
-        public void SetImage(Image img)
+        public void SetImage(Image image)
         {
             if (Image != null)
             {
@@ -17,7 +12,7 @@ namespace CaptainMurasa
                 Image = null;
             }
 
-            Image = img;
+            Image = image;
         }
     }
 }

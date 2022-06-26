@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CaptainMurasa
 {
-    public class BaseForm: Form
+    public class BaseForm : Form
     {
+        /// <summary>
+        /// データコンテキスト
+        /// </summary>
+        public object DataContext { get; private set; }
+
+        /// <summary>
+        /// 子画面
+        /// </summary>
+        protected List<BaseForm> ChildForms { get; set; } = new List<BaseForm>();
+
         [DefaultValue(typeof(Font), "メイリオ, 9.75pt")]
         public override Font Font { get => base.Font; set => base.Font = value; }
 
@@ -24,19 +30,33 @@ namespace CaptainMurasa
         /// </summary>
         protected override bool ProcessDialogKey(Keys keyData)
         {
-            if (Util.KeyParse(keyData, out bool ctrl, out _, out _) == Keys.W && ctrl)
+            var key = Util.KeyParse(keyData, out bool ctrl, out _, out _);
+
+            if (ctrl)
             {
-                Close();
+                switch (key)
+                {
+                    case Keys.C:
+                        PressControlC();
+                        break;
+
+                    case Keys.V:
+                        PressControlV();
+                        break;
+
+                    case Keys.R:
+                        Reload();
+                        break;
+
+                    case Keys.W:
+                        Close();
+                        break;
+                }
+
                 return true;
             }
 
-            if (Util.KeyParse(keyData, out ctrl, out _, out _) == Keys.R && ctrl)
-            {
-                Reload();
-                return true;
-            }
-
-            if (Util.KeyParse(keyData, out _, out _, out _) == Keys.F5)
+            if (key == Keys.F5)
             {
                 Reload();
                 return true;
@@ -45,6 +65,45 @@ namespace CaptainMurasa
             return base.ProcessDialogKey(keyData);
         }
 
-        public virtual void Reload() { }
+        public virtual void Reload()
+        { }
+
+        public virtual void PressControlC()
+        { }
+
+        public virtual void PressControlV()
+        { }
+
+        public virtual void PressDelete()
+        { }
+
+        /// <summary>
+        /// 子画面をモーダレスで出します。親画面を閉じたとき子画面は自動で閉じます。
+        /// </summary>
+        public void ShowModeless<T>(object data = null) where T : BaseForm, new()
+        {
+            var newForm = new T();
+
+            if (data != null)
+                newForm.DataContext = data;
+
+            newForm.Show();
+
+            ChildForms.Add(newForm);
+        }
+
+        /// <summary>
+        /// 子画面を出します。
+        /// </summary>
+        public void ShowDialog<T>(object data = null) where T : BaseForm, new()
+        {
+            using (var newForm = new T())
+            {
+                if (data != null)
+                    newForm.DataContext = data;
+
+                newForm.ShowDialog();
+            }
+        }
     }
 }

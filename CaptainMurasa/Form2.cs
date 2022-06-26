@@ -39,7 +39,41 @@ namespace CaptainMurasa
                     recipeInfos.Add(new RecipeInfo(yaml));
             }
 
-            dgvTask.SetDataSource(recipeInfos.OrderBy(x => x.Number).ToList());
+            Grid.SetDataSource(recipeInfos.OrderBy(x => x.Number).ToList());
+        }
+
+        private void Grid_DataSourceChanged(object sender, EventArgs e)
+        {
+            foreach (var row in Grid.CastRows())
+            {
+                var item = row.GetBoundItem<RecipeInfo>();
+
+                if (item.IsBroken)
+                {
+                    row.DefaultCellStyle.ForeColor = Color.Red;
+                    row.DefaultCellStyle.SelectionForeColor = Color.Red;
+                }
+                else
+                {
+                    row.DefaultCellStyle.ForeColor = Color.Black;
+                    row.DefaultCellStyle.SelectionForeColor = Color.Black;
+                }
+            }
+        }
+
+        private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var item = Grid.GetSelectedItem<RecipeInfo>();
+            var child = ChildForms.SingleOrDefault(x => ((RecipeInfo)x.DataContext).RecipeKey == item.RecipeKey);
+
+            if (child != null)
+            {
+                child.Activate();
+            }
+            else
+            {
+                ShowModeless<Form1>(item);
+            }
         }
     }
 }
